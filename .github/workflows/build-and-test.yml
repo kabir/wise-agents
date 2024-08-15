@@ -85,7 +85,8 @@ jobs:
     - name: Start Artemis
       working-directory: artemis
       run: |
-        ./artemis.sh &
+        # Disable persistence to see if it fixes problems with disk space
+        ./artemis.sh --disable-persistence &
     - name: Install wise-agents dependencies
       run: |
         pip install .

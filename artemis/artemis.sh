@@ -13,4 +13,12 @@ fi
 
 echo "Pod container: $POD_CONTAINER"
 
-$POD_CONTAINER run --rm --name mycontainer -p 61616:61616 -p 8161:8161 --rm apache/activemq-artemis:latest-alpine
+MOUNT_ETC_OVERRIDE=""
+if [ "$1" == "--disable-persistence" ]; then
+  echo "Disabling persistence"
+  MOUNT_ETC_OVERRIDE="-v ${PWD}/etc-override:/var/lib/artemis-instance/etc-override"
+fi
+
+set -x
+$POD_CONTAINER run --rm --name mycontainer -p 61616:61616 -p 8161:8161 ${MOUNT_ETC_OVERRIDE} --rm apache/activemq-artemis:latest-alpine
+set +x
