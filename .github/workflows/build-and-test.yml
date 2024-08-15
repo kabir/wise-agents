@@ -36,6 +36,8 @@ env:
   MODEL_PATH: .models
   MODEL_REPO: microsoft/Phi-3-mini-4k-instruct-gguf
   MODEL_NAME: Phi-3-mini-4k-instruct-q4.gguf
+  # Disable installing the LMM since it is too big
+  ENABLE_LMM: true
 
 
 jobs:
@@ -47,7 +49,7 @@ jobs:
     - run: echo ${GITHUB_WORKSPACE}
     - uses: actions/checkout@v4
     - name: Set up Python 3.12
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: "3.12"
     - uses: actions/cache@v4
@@ -59,13 +61,18 @@ jobs:
     - name:  Update pip
       run: |
         python -m pip install --upgrade pip
+    # The LMM takes too much space, so we will disable the steps to install it, and not run those tests
     - name: Install HuggingFaces Hub
+      # Skip LMM
+      if: env.ENABLE_LMM != 'true'
       run: pip install huggingface_hub
     - name: Download the model
+      if: env.ENABLE_LMM != 'true'
       run: |
         huggingface-cli login --token "$HUGGING_FACE_TOKEN"
         huggingface-cli download "$MODEL_REPO" "$MODEL_NAME" --local-dir "$MODEL_PATH" --local-dir-use-symlinks False
     - name: Start model server
+      if: env.ENABLE_LMM != 'true'
       # This one takes some time, and needs to be started in the background for the other steps to proceed.
       # Start it first before all the other preparatory steps so it is ready when the tests start.
       # TODO Find a better way to check if it is ready...
@@ -93,4 +100,4 @@ jobs:
         pip install -e '.[test]'
     - name: Test with pytest
       run: |
-        pytest --log-cli-level=DEBUG
+        pytest --log-cli-level=DEBUG -m "not needsllm" 
