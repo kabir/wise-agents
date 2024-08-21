@@ -1,0 +1,29 @@
+# Since we are using secrets in our tests, we need to take some extra precautions.
+# on pull_request: jobs do not have access to secrets.defaults:
+# This job will only run if a pull request is opened by a member of the team. If opened by an external contributor
+# approval from a team member is required.
+# Once this job completes, the build-and-test-workflow-run.yml workflow will run.
+
+
+name: Build and Test
+
+on:
+  push:
+    #branches: [ "main" ]
+  pull_request:
+    #branches: [ "main" ]
+
+permissions:
+  contents: read
+
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.ref || github.run_id }}'
+  cancel-in-progress: true
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Done, the on workflow_run job should start next"

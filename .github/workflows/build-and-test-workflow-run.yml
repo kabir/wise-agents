@@ -1,13 +1,11 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
-name: Build and Test
+name: Build and Test Workflow Run
 
 on:
-  push:
-    #branches: [ "main" ]
-  pull_request:
-    #branches: [ "main" ]
+  workflow_run:
+    workflows:
+      - "Build and Test"
+    types:
+      - completed
 
 permissions:
   contents: read
@@ -31,21 +29,21 @@ env:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   POSTGRES_DB: postgres
-  # Env vars to log in to hugging faces and download the model
-  HUGGING_FACE_TOKEN: ${{ secrets.HUGGING_FACE_TOKEN }}
-  MODEL_PATH: .models
-  MODEL_REPO: microsoft/Phi-3-mini-4k-instruct-gguf
-  MODEL_NAME: Phi-3-mini-4k-instruct-q4.gguf
-
+  # Keys/tokens for external models
+  GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     steps:
     - run: echo $MODEL_PATH
     - run: echo ${GITHUB_WORKSPACE}
     - uses: actions/checkout@v4
+      with:
+        repository: ${{ github.event.workflow_run.head_repository.full_name }}
+        ref: ${{ github.event.workflow_run.head_branch }}
+    - name: Output the head commit SHA
+      run: git rev-parse HEAD
     - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
