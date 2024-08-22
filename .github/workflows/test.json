@@ -1,0 +1,1 @@
+{"name":"${TEST_NAME}", "head_sha":"${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}", "status":"in_progress", "output":{"title":"${TEST_NAME} running", "summary":"Tests running"}}
