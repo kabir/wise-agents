@@ -14,7 +14,10 @@ from wiseagents.transports.stomp import StompWiseAgentTransport
 
     
 
-
+@pytest.fixture(scope="session", autouse=True)
+def run_after_all_tests():
+    WiseAgentRegistry.clear_agents()
+    WiseAgentRegistry.clear_contexts()
 
 cond = threading.Condition()
 def get_current_weather(location, unit="fahrenheit"):

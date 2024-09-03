@@ -15,7 +15,10 @@ from openai.types.chat import ChatCompletionMessageParam, ChatCompletion, ChatCo
 
 
 
-
+@pytest.fixture(scope="session", autouse=True)
+def run_after_all_tests():
+    WiseAgentRegistry.clear_agents()
+    WiseAgentRegistry.clear_contexts()
 class FakeOpenaiAPIWiseAgentLLM(WiseAgentRemoteLLM):
     
     client = None

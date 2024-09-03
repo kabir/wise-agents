@@ -1,5 +1,6 @@
 import logging
 import os
+import traceback
 
 import stomp.utils
 from wiseagents import WiseAgentMessage,WiseAgentTransport
@@ -80,6 +81,8 @@ class StompWiseAgentTransport(WiseAgentTransport):
         del state['_response_receiver']
         del state['_event_receiver']
         del state['_error_receiver']
+        del state['conn']
+        del state['conn2']
         return state 
 
 
@@ -87,6 +90,8 @@ class StompWiseAgentTransport(WiseAgentTransport):
         '''
         Start the transport.
         require the environment variables STOMP_USER and STOMP_PASSWORD to be set'''
+        if (self.conn is not None and self.conn.is_connected()) or (self.conn2 is not None and self.conn2.is_connected()):
+            return
         hosts = [(self.host, self.port)] 
         self.conn = stomp.Connection(host_and_ports=hosts, heartbeats=(60000, 60000))
         self.conn.set_listener('WiseAgentRequestTopicListener', WiseAgentRequestQueueListener(self))

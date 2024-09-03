@@ -1,6 +1,12 @@
+from wiseagents import WiseAgentRegistry
 from wiseagents.llm import OpenaiAPIWiseAgentLLM
 import pytest
 
+
+@pytest.fixture(scope="session", autouse=True)
+def run_after_all_tests():
+    WiseAgentRegistry.clear_agents()
+    WiseAgentRegistry.clear_contexts()
 
 @pytest.mark.needsllm
 def test_openai():
