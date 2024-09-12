@@ -6,6 +6,37 @@ import wiseagents.yaml_env
 wiseagents.yaml_env.setup_yaml_for_env_vars()
 
 
+def test_temp(monkeypatch):
+    loader = yaml.FullLoader
+    input = """
+    name: ${NAME}
+    """
+    monkeypatch.setenv("NAME", "1")
+    test_values = yaml.load(input, loader)
+    print(test_values)
+
+
+def test_temp_quoted(monkeypatch):
+    loader = yaml.FullLoader
+    input = """
+    name: !env_var "${NAME}" 
+    """
+    monkeypatch.setenv("NAME", "1")
+    test_values = yaml.load(input, loader)
+    print(test_values)
+
+
+def test_temp_tagged_unquoted(monkeypatch):
+    loader = yaml.FullLoader
+    input = """
+    name: !env_var ${NAME} 
+    """
+    monkeypatch.setenv("NAME", "1")
+    test_values = yaml.load(input, loader)
+    print(test_values)
+
+
+
 def test_yaml_env_var_not_set():
     loader = yaml.FullLoader
     input = """
@@ -94,6 +125,8 @@ def test_data_types_sanity():
         falseTitleCase: False
         falseUpperCase: FALSE
         string: hello world
+        intString: "1"
+        floatString: "1.1"
         array:
         - first
         - second
@@ -120,6 +153,10 @@ def test_data_types_sanity():
     assert type(test_values["falseUpperCase"]) == bool
     assert test_values["string"] == "hello world"
     assert type(test_values["string"]) == str
+    assert test_values["intString"] == "1"
+    assert type(test_values["intString"]) == str
+    assert test_values["floatString"] == "1.1"
+    assert type(test_values["floatString"]) == str
     assert len(test_values["array"]) == 2
     assert type(test_values["array"]) == list
     assert test_values["array"][0] == "first"
@@ -147,6 +184,9 @@ def test_data_types_when_replaced_by_env_var(monkeypatch):
         string_with_number_and_boolean: Hello ${INT} ${TRUE_TITLE_CASE}
         two_numbers: ${INT}${INT}
         two_numbers_float: ${INT}.${INT}
+        intString: !env_var "${INT}"
+        floatString: !env_var "${INT}.${INT}"
+
     """
 
     monkeypatch.setenv("INT", "1")
@@ -184,6 +224,11 @@ def test_data_types_when_replaced_by_env_var(monkeypatch):
     assert type(test_values["two_numbers"]) == int
     assert test_values["two_numbers_float"] == 1.1
     assert type(test_values["two_numbers_float"]) == float
+    assert test_values["intString"] == "1"
+    assert type(test_values["intString"]) == str
+    assert test_values["floatString"] == "1.1"
+    assert type(test_values["floatString"]) == str
+
 
 
 def test_data_types_when_replaced_by_env_var_default():
@@ -202,6 +247,9 @@ def test_data_types_when_replaced_by_env_var_default():
         string_with_number_and_boolean: Hello ${INT:1} ${TRUE_TITLE_CASE:True}
         two_numbers: ${INT:1}${INT:1}
         two_numbers_float: ${INT:1}.${INT:2}
+        intString: !env_var "${INT:1}"
+        floatString: !env_var "${INT:1}.${INT:1}"
+
     """
 
     test_values = yaml.load(input, loader)["test"]
@@ -229,3 +277,7 @@ def test_data_types_when_replaced_by_env_var_default():
     assert type(test_values["two_numbers"]) == int
     assert test_values["two_numbers_float"] == 1.2
     assert type(test_values["two_numbers_float"]) == float
+    assert test_values["intString"] == "1"
+    assert type(test_values["intString"]) == str
+    assert test_values["floatString"] == "1.1"
+    assert type(test_values["floatString"]) == str

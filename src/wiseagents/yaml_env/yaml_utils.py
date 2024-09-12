@@ -9,6 +9,30 @@ def _env_constructor(loader, node):
     value = loader.construct_scalar(node)
     groups = _env_pattern.findall(value)
 
+    # Check if the string is quoted or not
+    quoted = False
+    buffer = None
+    try:
+        lines = node.start_mark.buffer.split("\n")
+        temp = ""
+        for i in range(node.start_mark.line, node.end_mark.line + 1):
+            temp += lines[i] + "\n"
+        buffer = temp
+
+    except (AttributeError, IndexError):
+        # In case it is not a ScalerNode. I believe it always is though
+        pass
+    if buffer:
+
+        value_index = buffer.index(value)
+        char_before = buffer[value_index-1:value_index]
+        if char_before == "'" or char_before == '"':
+            after_index = value_index + len(value)
+            if after_index < len(buffer):
+                char_after = buffer[after_index:after_index+1]
+                if char_after == char_before:
+                    quoted = True
+
     for group in groups:
         env_var = group
         default = None
@@ -28,20 +52,21 @@ def _env_constructor(loader, node):
 
         value = value.replace(f"${{{group}}}", env_value)
 
-    if value.lower() == "true":
-        return True
-    elif value.lower() == "false":
-        return False
+    if not quoted:
+        if value.lower() == "true":
+            return True
+        elif value.lower() == "false":
+            return False
 
-    try:
-        return int(value)
-    except:
-        pass
+        try:
+            return int(value)
+        except:
+            pass
 
-    try:
-        return float(value)
-    except:
-        pass
+        try:
+            return float(value)
+        except:
+            pass
 
     return value
 
@@ -55,6 +80,6 @@ def setup_yaml_for_env_vars():
     In the second example, '${PORT:80}', we are doing the same but looking up `os.getenv("PORT"). In this case,
     if the 'PORT' environment variable is not set, it will use the default value shows, which in this case is '80'.
     """
-    yaml.add_implicit_resolver("!pathex", _env_pattern)
-    yaml.add_constructor("!pathex", _env_constructor)
+    yaml.add_implicit_resolver("!env_var", _env_pattern)
+    yaml.add_constructor("!env_var", _env_constructor)
 
