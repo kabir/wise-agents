@@ -1,8 +1,10 @@
 import os
 
 import pytest
+import yaml
 
 from wiseagents.graphdb import Entity, GraphDocument, Neo4jLangChainWiseAgentGraphDB, Relationship, Source
+from wiseagents.yaml import WiseAgentsLoader
 
 collection_name = "test-vector-db"
 @pytest.fixture(scope="session", autouse=True)
@@ -51,8 +53,10 @@ def set_env(monkeypatch):
 
 def test_insert_graph_documents_and_query(monkeypatch):
     set_env(monkeypatch)
+
+    # Keep one using the constructor, elsewhere use the yaml file
     graph_db = Neo4jLangChainWiseAgentGraphDB(properties=["name", "type"], collection_name=collection_name,
-                                              url="bolt://localhost:7687", refresh_graph_schema=False)
+                                              url = "bolt://localhost:7687", refresh_graph_schema = False)
 
     try:
         page_content = "The CN Tower is located in Toronto, a major city in Ontario. Ontario is a province in Canada."
@@ -98,8 +102,8 @@ def test_insert_graph_documents_and_query(monkeypatch):
 
 def test_insert_entity_and_query(monkeypatch):
     set_env(monkeypatch)
-    graph_db = Neo4jLangChainWiseAgentGraphDB(properties=["name", "type"], collection_name=collection_name,
-                                              url="bolt://localhost:7687", refresh_graph_schema=False)
+    with open("tests/wiseagents/graphdb/test_neo4j_lang_chain_wise_agent_graph_db.yaml") as stream:
+        graph_db = yaml.load(stream, Loader=WiseAgentsLoader)
 
     try:
         page_content = ""
@@ -117,8 +121,8 @@ def test_insert_entity_and_query(monkeypatch):
 
 def test_insert_relationship_and_query(monkeypatch):
     set_env(monkeypatch)
-    graph_db = Neo4jLangChainWiseAgentGraphDB(properties=["name", "type"], collection_name=collection_name,
-                                              url="bolt://localhost:7687", refresh_graph_schema=False)
+    with open("tests/wiseagents/graphdb/test_neo4j_lang_chain_wise_agent_graph_db.yaml") as stream:
+        graph_db = yaml.load(stream, Loader=WiseAgentsLoader)
 
     try:
         page_content = "Ottawa is the capital of Canada."

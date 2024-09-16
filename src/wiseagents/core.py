@@ -14,6 +14,7 @@ from openai.types.chat import ChatCompletionToolParam, ChatCompletionMessagePara
 import redis
 from wiseagents.graphdb import WiseAgentGraphDB
 from wiseagents.llm import OpenaiAPIWiseAgentLLM, WiseAgentLLM
+from wiseagents.yaml import ValidatingYAMLObject
 from wiseagents.vectordb import WiseAgentVectorDB
 from wiseagents.yaml import WiseAgentsLoader
 from wiseagents.wise_agent_messaging import WiseAgentMessage, WiseAgentMessageType, WiseAgentTransport, WiseAgentEvent
@@ -26,7 +27,7 @@ class WiseAgentCollaborationType(Enum):
     CHAT = auto()
 
 
-class WiseAgentTool(yaml.YAMLObject):
+class WiseAgentTool(ValidatingYAMLObject):
     ''' A WiseAgentTool is an abstract class that represents a tool that can be used by an agent to perform a specific task.'''
     yaml_tag = u'!wiseagents.WiseAgentTool'
     yaml_loader = WiseAgentsLoader
@@ -825,7 +826,7 @@ class WiseAgentContext():
             self._collaboration_type[chat_uuid] = collaboration_type
 
 
-class WiseAgent(yaml.YAMLObject):
+class WiseAgent(ValidatingYAMLObject):
     ''' A WiseAgent is an abstract class that represents an agent that can send and receive messages to and from other agents.
     '''
     yaml_tag = u'!wiseagents.WiseAgent'

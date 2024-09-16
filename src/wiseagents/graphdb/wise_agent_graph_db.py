@@ -5,6 +5,7 @@ from typing import Optional, Any, List
 import yaml
 from pydantic import BaseModel, Field
 from wiseagents.yaml import WiseAgentsLoader
+from wiseagents.yaml import ValidatingYAMLObject
 
 
 class Entity(BaseModel):
@@ -65,7 +66,7 @@ class GraphDocument(BaseModel):
     source: Source
 
 
-class WiseAgentGraphDB(yaml.YAMLObject):
+class WiseAgentGraphDB(ValidatingYAMLObject):
     """Abstract class to define the interface for a WiseAgentGraphDB."""
 
     yaml_tag = u'!WiseAgentGraphDB'

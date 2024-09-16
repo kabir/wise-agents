@@ -95,6 +95,7 @@ class Neo4jLangChainWiseAgentGraphDB(LangChainWiseAgentGraphDB):
     and a corresponding Neo4j vector database.
     """
     yaml_tag = u'!wiseagents.graphdb.Neo4jLangChainWiseAgentGraphDB'
+    yaml_schema = "src/wiseagents/schema/neo4j-langchain-wise-agent-graph-db.json"
 
     def __new__(cls, *args, **kwargs):
         """Create a new instance of the class, setting default values for the instance variables."""

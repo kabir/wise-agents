@@ -1,0 +1,6 @@
+---
+!wiseagents.graphdb.Neo4jLangChainWiseAgentGraphDB
+url: bolt://localhost:7687
+refresh_graph_schema: False
+collection_name: test-vector-db
+properties: [ name, type ]
