@@ -4,7 +4,7 @@ from typing import Optional, List
 
 import yaml
 from pydantic import BaseModel, Field
-from wiseagents.yaml import WiseAgentsLoader
+from wiseagents.yaml import WiseAgentsLoader, ValidatingYAMLObject
 
 import wiseagents.yaml
 
@@ -22,7 +22,7 @@ class Document(BaseModel):
     metadata: Optional[dict] = Field(default_factory=dict)
 
 
-class WiseAgentVectorDB(yaml.YAMLObject):
+class WiseAgentVectorDB(ValidatingYAMLObject):
     """Abstract class to define the interface for a WiseAgentVectorDB."""
     yaml_tag = u'!WiseAgentVectorDB'
     yaml_loader = WiseAgentsLoader

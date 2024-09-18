@@ -2,6 +2,7 @@ import json
 import yaml
 from jsonschema import validate
 
+
 class ValidatingYAMLObject(yaml.YAMLObject):
 
     yaml_schema = None

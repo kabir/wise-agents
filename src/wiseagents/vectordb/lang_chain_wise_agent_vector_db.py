@@ -72,6 +72,7 @@ class PGVectorLangChainWiseAgentVectorDB(LangChainWiseAgentVectorDB):
     """
 
     yaml_tag = u'!wiseagents.vectordb.PGVectorLangChainWiseAgentVectorDB'
+    yaml_schema = "src/wiseagents/schema/pgvector-langchain-wise-agent-vector-db.json"
 
     def __new__(cls, *args, **kwargs):
         """Create a new instance of the class, setting default values for the instance variables."""

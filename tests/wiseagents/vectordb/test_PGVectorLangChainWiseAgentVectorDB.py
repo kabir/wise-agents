@@ -1,10 +1,12 @@
 import os
+import yaml
 
 from wiseagents.vectordb import Document, PGVectorLangChainWiseAgentVectorDB
-
+from wiseagents.yaml import WiseAgentsLoader
 
 def get_connection_string():
     return f"postgresql+psycopg://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@localhost:6024/{os.environ['POSTGRES_DB']}"
+
 
 
 def set_env(monkeypatch):
@@ -28,6 +30,8 @@ def test_create_and_delete_collection(monkeypatch):
 
 def test_insert_documents_and_query(monkeypatch):
     set_env(monkeypatch)
+
+    # Keep this one using the constructor, elsewhere use the yaml file
     pg_vector_db = PGVectorLangChainWiseAgentVectorDB(get_connection_string())
 
     try:
@@ -63,7 +67,8 @@ def test_insert_documents_and_query(monkeypatch):
 
 def test_insert_or_update_documents_and_query(monkeypatch):
     set_env(monkeypatch)
-    pg_vector_db = PGVectorLangChainWiseAgentVectorDB(get_connection_string())
+    with open("tests/wiseagents/vectordb/test_pgvector_lang_chain_wise_agent_vector_db.yaml") as stream:
+        pg_vector_db = yaml.load(stream, Loader=WiseAgentsLoader)
 
     try:
         # should be no matches initially
@@ -90,7 +95,8 @@ def test_insert_or_update_documents_and_query(monkeypatch):
 
 def test_delete_documents(monkeypatch):
     set_env(monkeypatch)
-    pg_vector_db = PGVectorLangChainWiseAgentVectorDB(get_connection_string())
+    with open("tests/wiseagents/vectordb/test_pgvector_lang_chain_wise_agent_vector_db.yaml") as stream:
+        pg_vector_db = yaml.load(stream, Loader=WiseAgentsLoader)
 
     try:
         pg_vector_db.insert_documents([Document(id="123", content="Tower Bridge is located in London."),

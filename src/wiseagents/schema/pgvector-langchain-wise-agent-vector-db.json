@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/product.schema.json",
+  "title": "Neo4j Langchain Wise Agent Graph DB",
+  "description": "An Agent to interact with a Neo4j Langchain Graph DB",
+  "type": "object",
+  "properties": {
+    "connection_string": {
+      "type": "string",
+      "description": "The connection string to the Neo4j database"
+    },
+    "embedding_model_name": {
+      "type": "string",
+      "description": "The optional name of the embedding model to use",
+      "default": "all-mpnet-base-v2"
+    }
+  },
+  "required": [
+    "connection_string"
+  ]
+}
