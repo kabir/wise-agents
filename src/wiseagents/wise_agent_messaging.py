@@ -3,7 +3,7 @@ from enum import Enum, auto
 from typing import Callable, Optional
 
 from yaml import YAMLObject
-from wiseagents.yaml import WiseAgentsLoader
+from wiseagents.yaml import ValidatingYAMLObject, WiseAgentsLoader
 
 class WiseAgentMessageType(Enum):
     ACK = auto()
@@ -93,7 +93,8 @@ class WiseAgentMessage(YAMLObject):
         """Get the id of the tool."""
         return self._route_response_to
 
-class WiseAgentTransport(YAMLObject):
+
+class WiseAgentTransport(ValidatingYAMLObject):
     yaml_loader = WiseAgentsLoader
 
     ''' A transport for sending messages between agents. '''    

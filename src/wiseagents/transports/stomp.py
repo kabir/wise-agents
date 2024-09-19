@@ -52,6 +52,7 @@ class StompWiseAgentTransport(WiseAgentTransport):
     '''A transport for sending messages between agents using the STOMP protocol.'''
     
     yaml_tag = u'!wiseagents.transports.StompWiseAgentTransport'
+    yaml_schema = "src/wiseagents/schema/stomp-wise-agent-transport.json"
     request_conn : stomp.Connection = None
     response_conn : stomp.Connection = None
     

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/product.schema.json",
+  "title": "Stomp Wise Agent Transport",
+  "description": "A transport for sending messages between agents using the STOMP protocol",
+  "type": "object",
+  "properties": {
+    "agent_name": {
+      "type": "string",
+      "description": "The agent name"
+    },
+    "host": {
+      "type": "string",
+      "description": "The host"
+    },
+    "port": {
+      "type": "integer",
+      "description": "The port"
+    }
+  },
+  "required": [
+    "agent_name",
+    "host",
+    "port"
+  ]
+}
