@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/product.schema.json",
+  "title": "Neo4j Langchain Wise Agent Graph DB",
+  "description": "An Agent to interact with a Neo4j Langchain Graph DB",
+  "type": "object",
+  "properties": {
+    "api-key": {
+      "type": "string",
+      "description": "The API Key for the LLM",
+      "default": "sk-no-key-required"
+    },
+    "model_name": {
+      "type": "string",
+      "description": "The name of the embedding model to use for the graph"
+    },
+    "remote_address": {
+      "type": "string",
+      "description": "The remote address of the agent.",
+      "default": "http://localhost:8001/v1"
+    },
+    "system_message": {
+      "type": "string",
+      "description": "The system message to be sent to the agent"
+    }
+  },
+  "required": [
+    "model_name",
+    "system_message"
+  ]
+}

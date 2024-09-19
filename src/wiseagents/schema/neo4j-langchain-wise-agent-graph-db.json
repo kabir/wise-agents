@@ -8,8 +8,6 @@
     "collection_name": {
       "type": "string",
       "description": "The collection name to use for the vector database",
-      "exclusiveMinimum": 0,
-      "maximum": 1
     },
     "embedding_model_name": {
       "type": "string",

@@ -10,6 +10,7 @@ class OpenaiAPIWiseAgentLLM(WiseAgentRemoteLLM):
     '''A class to define a WiseAgentLLM that uses the OpenAI API.'''
     client = None
     yaml_tag = u'!wiseagents.llm.OpenaiAPIWiseAgentLLM'
+    yaml_schema = "src/wiseagents/schema/openapi-wise-agent-llm.json"
 
 
     
